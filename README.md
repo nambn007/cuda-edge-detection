@@ -1,15 +1,6 @@
-# FFT Convolution 2D
+# CUDA Edge Detection (Sobel Filter)
 
-This project implements FilterSobel for detection edge in individual images or directories containing multiple images.
-
-## Performance
-
-The project has been tested on an NVIDIA RTX 3060 GPU with Driver Version: 550.120 with the following results:
-
-- **CUDA FFT Convolution**: Average time for 100 iterations: 1.13191 ms
-- **CPU FFT Convolution**: Average time for 100 iterations: 23.1025 ms
-
-Thus, the CUDA version is approximately 20 times faster than the CPU version.
+This project implements SobelFilter for detecting edge in individual images or directories containing multiple images.
 
 ## System Requirements
 
@@ -54,67 +45,46 @@ If you're not using Docker, you need to install the following dependencies:
 
 ## Usage
 
-The project provides two main executables:
+The project provides:
 
-### 1. benchmark_fft_convolution
+### 2. Edge Detection
 
-Used to evaluate the performance of both methods (CUDA and CPU).
-
-```bash
-./benchmark_fft_convolution <path_image> <kernel_file>
-```
-
-Example:
-```bash
-./benchmark_fft_convolution ../data/cat.jpg ../benchmarks/kernel1.csv
-```
-
-### 2. fft_convolution
-
-Used to apply a kernel to an image or set of images.
+Used to detect edge on an image or set of images (Vertical or Horizontal)
 
 ```bash
-Usage: ./fft_convolution parameters
-  --help                    Print help message
-  --cuda arg (=1)           Use CUDA (1=enabled, 0=disabled)
-  --image arg               Path to the image (process a single image)
-  --folder arg              Path to folder of images (process multiple images)
-  --kernel arg              Path to the kernel file
-  --output arg (=./outputs) Path to output folder
+Usage: ./cuda_edge_detection
+  -h [ --help ]                        Show help message
+  -i [ --input ] arg                   Input image file
+  -d [ --input-dir ] arg               Input directory
+  -D [ --output-dir ] arg (=./outputs) Output directory
+  -v [ --vertical ] arg (=0)           Detect vertical edges
+  -h [ --horizontal ] arg (=0)         Detect horizontal edges
+  -s [ --num-streams ] arg             Number of CUDA streams to use
 ```
 
 ### Usage Examples:
 
-Process a single image with a Gaussian blur kernel:
+Process a single image with vertical sobel filter:
 ```bash
-./fft_convolution -k ../kernels/gaussian_blur_15.csv -f ../data/cat.jpg
+./cuda_edge_detection --input ../data/cat.jpg --output-dir ./outputs --vertical true
 # Output image will be saved to ./outputs/cat.jpg
 ```
 
-Process multiple images from a directory using CUDA:
+Process a single image with horizontal sobel filter:
 ```bash
-./fft_convolution -k ../kernels/gaussian_blur_15.csv -d ../data/input_100images -o ../data/output_cuda_100images
+./cuda_edge_detection --input ../data/cat.jpg --output-dir ./outputs --horizontal true
+# Output image will be saved to ./outputs/cat.jpg
 ```
 
-Process multiple images from a directory using CPU:
+
+Process multiple images from a directory using CUDA:
 ```bash
-./fft_convolution -k ../kernels/gaussian_blur_15.csv -d ../data/input_100images -o ../data/output_cpu_100images -c false
+./cuda_edge_detection --input-dir ../data/input_100images --output-dir ../data/output_horizontal  --horizontal true
 ```
 
 ## Project Structure
 
-- **benchmark.cpp**: Performance evaluation program
+- **edge_detection.h**: Define process edege detection
 - **main.cpp**: Main image processing program
-- **fft.h/fft.cuh**: Function declarations and definitions for FFT Convolution
-- **utils.h**: Image processing utilities
+- **utils.h**: logging and check status cuda
 
-## Kernels
-
-The project comes with some predefined kernels in the `kernels/` directory:
-- **gaussian_blur_15.csv**: Gaussian blur kernel of size 15x15
-
-## Notes
-
-- All input images are resized to 640x640 before processing
-- Applied kernels are automatically normalized
-- Logs are stored in the `./logs` directory

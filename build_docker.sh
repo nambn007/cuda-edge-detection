@@ -1,1 +1,1 @@
-docker build -t cuda-fft-convolution .
+docker build -t cuda-edge-detection .

@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
         ("input,i", po::value<std::string>(), "Input image file")
         ("input-dir,d", po::value<std::string>(), "Input directory")
         ("output-dir,D", po::value<std::string>()->default_value("./outputs"), "Output directory")
-        ("vertical,v", po::value<bool>()->default_value(true), "Detect vertical edges")
+        ("vertical,v", po::value<bool>()->default_value(false), "Detect vertical edges")
         ("horizontal,h", po::value<bool>()->default_value(false), "Detect horizontal edges")
         ("num-streams,s", po::value<int>(), "Number of CUDA streams to use");
 
@@ -73,11 +73,10 @@ int main(int argc, char* argv[]) {
     std::string outputDir = vm["output-dir"].as<std::string>();
     bool use_vertical = vm["vertical"].as<bool>();
     bool use_horizontal = vm["horizontal"].as<bool>();
-    if (use_vertical && use_horizontal) {
-        LOG(ERROR) << "Cannot use both vertical and horizontal edge detection.";
+    if (!use_vertical && !use_horizontal) {
+        LOG(ERROR) << "Please specify at least one edge detection type: vertical or horizontal.";
         return -1;
     }
-
 
     int num_streams = sm_count;
     if (vm.count("num-streams")) {
@@ -113,7 +112,10 @@ int main(int argc, char* argv[]) {
         LOG(INFO) << "Using horizontal edge detection.";
     }
 
-    process_edege_detection(images_path, outputDir, false, num_streams);
-    
+    if (use_vertical)
+        process_edege_detection(images_path, outputDir, true, num_streams);
+    else 
+        process_edege_detection(images_path, outputDir, false, num_streams);
+
     return 0;
 }

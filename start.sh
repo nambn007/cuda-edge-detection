@@ -1,4 +1,6 @@
-docker run -it --rm --gpus=all \
+#!/bin/bash
+docker run -it --rm --device /dev/dri --privileged --gpus all \
     -v $(pwd):/app \
-    cuda-fft-convolution:latest \
+    --env NVIDIA_DISABLE_REQUIRE=1 \
+    cuda-edge-detection:latest \
     bash
