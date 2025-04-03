@@ -1,0 +1,10 @@
+Log file created at: 2025/04/03 09:57:40
+Running on machine: vbd-namnt55-d
+Running duration (h:mm:ss): 0:00:00
+Log line format: [IWEF]yyyymmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I20250403 09:57:40.194459 158078 main.cpp:105] Start processing images...
+I20250403 09:57:40.195243 158078 main.cpp:106] Number of images: 1
+I20250403 09:57:40.195253 158078 main.cpp:107] Number of streams: 68
+I20250403 09:57:40.195261 158078 main.cpp:108] Output directory: ./outputs
+I20250403 09:57:40.195268 158078 main.cpp:110] Using vertical edge detection.
+I20250403 09:57:40.195277 158078 edge_detection.h:30] Use batch-size 68 for processing images.
